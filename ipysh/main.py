@@ -1,0 +1,2 @@
+def ipysh():
+    print('Welcome')
