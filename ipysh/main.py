@@ -13,14 +13,12 @@ def ipysh():
 
     cfg.TerminalInteractiveShell.prompts_class = DefaultPrompt
 
-    cfg.TerminalInteractiveShell.ipython_dir = str(Path.home() / '.ipysh')
-    cfg.BaseIPythonApplication.ipython_dir = str(Path.home() / '.ipysh')
+    cfg.TerminalInteractiveShell.ipython_dir = str(Path.home() / ".ipysh")
+    cfg.BaseIPythonApplication.ipython_dir = str(Path.home() / ".ipysh")
     cfg.BaseIPythonApplication.copy_config_files = True
-    
+
     cfg.InteractiveShell.show_rewritten_input = False
     cfg.InteractiveShell.autocall = 2
-    cfg.InteractiveShellApp.exec_lines = [
-        '%rehashx',
-    ]
+    cfg.InteractiveShellApp.exec_lines = ["%rehashx"]
 
     IPython.start_ipython(config=cfg)

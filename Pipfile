@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pex = "*"
+black = "*"
 
 [packages]
 ipython = "*"

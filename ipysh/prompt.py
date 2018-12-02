@@ -22,22 +22,22 @@ class DefaultPrompt(Prompts):
         if symlink_matches:
             prefix = max(symlink_matches, key=len)
             cwd = cwd.replace(prefix, symlink_map[prefix])
-        cwd = cwd.replace(str(home), '~')
-        exit_code = get_ipython().user_ns.get('_exit_code', 0)
+        cwd = cwd.replace(str(home), "~")
+        exit_code = get_ipython().user_ns.get("_exit_code", 0)
         return [
-            (Token.OutPromptNum, f'[{exit_code}] ' if exit_code else ''),
+            (Token.OutPromptNum, f"[{exit_code}] " if exit_code else ""),
             (Token, getuser()),
-            (Token, ' at '),
+            (Token, " at "),
             (Token, gethostname()),
-            (Token, ' in '),
+            (Token, " in "),
             (Token.Keyword, cwd),
-            (Token, '\n'),
-            (Token.Prompt, '$ '),
+            (Token, "\n"),
+            (Token.Prompt, "$ "),
         ]
 
     def out_prompt_tokens(self):
         return [
-            (Token.OutPrompt, 'Out['),
+            (Token.OutPrompt, "Out["),
             (Token.OutPromptNum, str(self.shell.execution_count)),
-            (Token.OutPrompt, ']: '),
+            (Token.OutPrompt, "]: "),
         ]
