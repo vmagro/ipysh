@@ -18,7 +18,7 @@ def ipysh():
     cfg.BaseIPythonApplication.copy_config_files = True
     
     cfg.InteractiveShell.show_rewritten_input = False
-    cfg.InteractiveShell.autocall = 1
+    cfg.InteractiveShell.autocall = 2
     cfg.InteractiveShellApp.exec_lines = [
         '%rehashx',
     ]

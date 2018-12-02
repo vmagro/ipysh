@@ -8,6 +8,7 @@ pex = "*"
 
 [packages]
 ipython = "*"
+astor = "*"
 
 [requires]
 python_version = "3.7"
