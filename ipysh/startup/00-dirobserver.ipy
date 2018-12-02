@@ -6,6 +6,7 @@ import os
 from IPython.core.magic import register_line_magic
 
 import hglib
+from git import Repo as GitRepo
 
 
 class DirObserver(object, metaclass=ABCMeta):
@@ -40,7 +41,25 @@ class HgDir(DirObserver):
         return ''
 
 
-dir_observers = [HgDir()]
+class GitDir(DirObserver):
+
+    def enter(self, path: str) -> None:
+        try:
+            self.repo = GitRepo(path)
+        except Exception:
+            self.repo = None
+
+    def _active_branch(self) -> Optional[str]:
+        if not self.repo:
+            return None
+        return self.repo.active_branch.name
+
+    def prompt(self) -> Optional[str]:
+        if self._active_branch():
+            return f'<{self._active_branch()}>'
+        return ''
+
+dir_observers = [HgDir(), GitDir()]
 
 
 def __ipysh_update_observers():
