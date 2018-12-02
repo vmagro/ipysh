@@ -1,4 +1,5 @@
 from IPython.terminal.prompts import Prompts, Token
+from IPython.core.getipython import get_ipython
 
 import os
 from pathlib import Path
@@ -22,7 +23,9 @@ class DefaultPrompt(Prompts):
             prefix = max(symlink_matches, key=len)
             cwd = cwd.replace(prefix, symlink_map[prefix])
         cwd = cwd.replace(str(home), '~')
+        exit_code = get_ipython().user_ns.get('_exit_code', 0)
         return [
+            (Token.OutPrompt, f'[{exit_code}] ' if exit_code else ''),
             (Token, getuser()),
             (Token, ' at '),
             (Token, gethostname()),
