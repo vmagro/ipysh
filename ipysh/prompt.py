@@ -25,7 +25,7 @@ class DefaultPrompt(Prompts):
         cwd = cwd.replace(str(home), '~')
         exit_code = get_ipython().user_ns.get('_exit_code', 0)
         return [
-            (Token.OutPrompt, f'[{exit_code}] ' if exit_code else ''),
+            (Token.OutPromptNum, f'[{exit_code}] ' if exit_code else ''),
             (Token, getuser()),
             (Token, ' at '),
             (Token, gethostname()),
@@ -37,7 +37,7 @@ class DefaultPrompt(Prompts):
 
     def out_prompt_tokens(self):
         return [
-            (Token.OutPrompt, 'Out<'),
+            (Token.OutPrompt, 'Out['),
             (Token.OutPromptNum, str(self.shell.execution_count)),
-            (Token.OutPrompt, '>: '),
+            (Token.OutPrompt, ']: '),
         ]
