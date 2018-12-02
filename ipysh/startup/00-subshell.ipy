@@ -1,0 +1,13 @@
+import re
+
+
+regex = re.compile(r'\$\((.*)\)')
+
+
+def convert_subshell(lines):
+    """fix $(cmd) style subshell"""
+    return [regex.sub(r'!(\1)', l) for l in lines]
+
+
+ip = get_ipython()
+ip.input_transformers_cleanup.append(convert_subshell)
