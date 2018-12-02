@@ -1,0 +1,92 @@
+from abc import abstractmethod, ABCMeta
+from typing import Optional
+from pathlib import Path
+import os
+
+from IPython.core.magic import register_line_magic
+
+import hglib
+
+
+class DirObserver(object, metaclass=ABCMeta):
+    @abstractmethod
+    def enter(self, path: str) -> None:
+        pass
+
+    @abstractmethod
+    def prompt(self) -> Optional[str]:
+        pass
+
+
+class HgDir(DirObserver):
+
+    def enter(self, path: str) -> None:
+        try:
+            self.repo = hglib.open(path)
+        except Exception:
+            self.repo = None
+
+    def _active_book(self) -> Optional[str]:
+        if not self.repo:
+            return None
+        bookmarks, active = self.repo.bookmarks()
+        if active != -1:
+            return bookmarks[active][0].decode('utf-8')
+        return None
+
+    def prompt(self) -> Optional[str]:
+        if self._active_book():
+            return f'<{self._active_book()}>'
+        return ''
+
+
+dir_observers = [HgDir()]
+
+
+def __ipysh_update_observers():
+    for observer in dir_observers:
+        observer.enter(Path.cwd())
+
+__ipysh_update_observers()
+
+
+# have to re-implement cd, pushd and popd here to allow directory observer
+# functionality
+
+@register_line_magic
+def cd(line):
+    fullpath = Path(line)
+    if not line:
+        fullpath = Path.home()
+    os.chdir(fullpath.expanduser())
+    __ipysh_update_observers()
+
+del cd
+
+
+__ipysh_dirstack = []
+
+@register_line_magic
+def pushd(line):
+    fullpath = Path(line)
+    if not line:
+        fullpath = Path.home()
+    __ipysh_dirstack.append(Path.cwd())
+    os.chdir(fullpath.expanduser())
+    __ipysh_update_observers()
+
+del pushd
+
+
+@register_line_magic
+def popd(line):
+    if not __ipysh_dirstack:
+        print('directory stack empty')
+        return
+    fullpath = __ipysh_dirstack.pop()
+    os.chdir(fullpath.expanduser())
+    __ipysh_update_observers()
+
+del popd
+
+
