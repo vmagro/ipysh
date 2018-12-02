@@ -9,6 +9,8 @@ pex = "*"
 [packages]
 ipython = "*"
 astor = "*"
+python-hglib = "*"
+gitpython = "*"
 
 [requires]
 python_version = "3.7"
